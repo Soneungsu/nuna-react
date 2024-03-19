@@ -1,0 +1,28 @@
+.main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.box {
+    border: 3px solid red;
+    width: 500px;
+    margin: 0 1rem;
+}
+
+.item-img {
+    width: 400px;
+}
+
+.me {
+    margin-top: 1rem;
+    text-align: center;
+}
+
+.result {
+    text-align: center;
+}
+
+.btn-items {
+    text-align: center;
+}
