@@ -1,13 +1,6 @@
-import { useState } from "react";
+import React, { Component } from "react";
 import "./App.css";
 import Box from "./component/box.jsx";
-
-//1. 박스 2개(타이틀,사진,결과)
-//2. 가위바위보버튼이 있다
-//3. 버튼을 클릭하면 클릭한 값이 박스에 보인다.
-//4. 컴퓨터는 랜덤하게 아이템선택이 된다.
-//5. 3-4의결과를 가지고 누가 이겼는지 승패를 따진다.
-//6.승패결과에 따라 테두리색이 바뀐다(지면:빨, 비김:검정, 이김:파랑)
 
 const choice = {
     rock: {
@@ -24,64 +17,64 @@ const choice = {
     },
 };
 
-function App() {
-    const [userSelect, setUserSelect] = useState(null);
-    const [computerSelect, setComputerSelect] = useState(null);
-    const [result, setResult] = useState("");
+class App extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            userSelect: null,
+            computerSelect: null,
+            result: "",
+        };
+    }
 
-    const play = (userChoice) => {
-        setUserSelect(choice[userChoice]);
+    play = (userChoice) => {
+        this.setState({ userSelect: choice[userChoice] });
 
-        let computerChoice = randomChoice();
-        setComputerSelect(computerChoice);
-        setResult(judgement(choice[userChoice], computerChoice)); //유저가 선택한 값이랑 컴퓨터가 선택한 값을 전달
+        let computerChoice = this.randomChoice();
+        this.setState({ computerSelect: computerChoice });
+        this.setState({
+            result: this.judgement(choice[userChoice], computerChoice),
+        });
     };
 
-    const judgement = (user, computer) => {
-        console.log("user", user, "computer", computer);
-
-        // user == computer Tie
-        // user == rock , computer == scissors user Win
-        // user == rock , computer == paper user loser
-        // user == scissors ,  computer == paper user Win
-        // user == scissors ,  computer == paper user Win
-        // user == scissors ,  computer == rock user loser
-        // user == paper ,  computer == rock user Win
-        // user == paper ,  computer == scissors user loser
-
-        if (user.name == computer.name) {
+    judgement = (user, computer) => {
+        if (user.name === computer.name) {
             return "Tie";
-        } else if (user.name == "Rock")
-            return computer.name == "Scissors" ? "Win" : "Lose";
-        else if (user.name == "Paper")
-            return computer.name == "Rock" ? "Win" : "Lose";
-        else if (user.name == "Scissors")
-            return computer.name == "Paper" ? "Win" : "Lose";
+        } else if (user.name === "Rock") {
+            return computer.name === "Scissors" ? "Win" : "Lose";
+        } else if (user.name === "Paper") {
+            return computer.name === "Rock" ? "Win" : "Lose";
+        } else if (user.name === "Scissors") {
+            return computer.name === "Paper" ? "Win" : "Lose";
+        }
     };
 
-    const randomChoice = () => {
-        let itemArray = Object.keys(choice); //객체에 키값만 뽑아서 배열로 반환한다.
-        console.log("랜덤으로나올까?", itemArray);
+    randomChoice = () => {
+        let itemArray = Object.keys(choice);
         let randomItem = Math.floor(Math.random() * itemArray.length);
         let final = itemArray[randomItem];
 
         return choice[final];
     };
 
-    return (
-        <div>
-            <h1 className="game-name">Rock! Scissors! Paper!</h1>
-            <div className="main">
-                <Box title="You" item={userSelect} result={result}></Box>
-                <Box title="AI" item={computerSelect} result={result}></Box>
+    render() {
+        const { userSelect, computerSelect, result } = this.state;
+
+        return (
+            <div>
+                <h1 className="game-name">Rock! Scissors! Paper!</h1>
+                <div className="main">
+                    <Box title="You" item={userSelect} result={result}></Box>
+                    <Box title="AI" item={computerSelect} result={result}></Box>
+                </div>
+                <div className="btn">
+                    <button onClick={() => this.play("scissors")}>✌️</button>
+                    <button onClick={() => this.play("rock")}>✊</button>
+                    <button onClick={() => this.play("paper")}>🖐️</button>
+                </div>
             </div>
-            <div className="btn">
-                <button onClick={() => play("scissors")}>✌️</button>
-                <button onClick={() => play("rock")}>✊</button>
-                <button onClick={() => play("paper")}>🖐️</button>
-            </div>
-        </div>
-    );
+        );
+    }
 }
 
 export default App;
